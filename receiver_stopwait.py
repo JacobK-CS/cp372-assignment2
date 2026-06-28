@@ -40,7 +40,9 @@ def main():
             if seq_num == expected_seq and file_open:
                 f.write(data)
                 expected_seq += 1
-            ack_packet = struct.pack('!IIII', 1, seq_num, 1, 0)
+            # Stop-and-Wait: ACK the last correctly received in-order sequence.
+            ack_seq = expected_seq - 1 if file_open else 0
+            ack_packet = struct.pack('!IIII', 1, ack_seq, 1, 0)
             sock.sendto(ack_packet, addr)
 
         elif pkt_type == 3:

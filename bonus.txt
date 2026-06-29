@@ -1,0 +1,29 @@
+SELECTIVE REPEAT WITH A SINGLE TIMER (+10% BONUS TASK)
+
+The following files are required: sender_sr.py and receiver_sr.py
+
+To run, the command-line interface is the same as for Go-Back-N:
+
+Terminal 1: python3 receiver_sr.py  
+
+Terminal 2: python3 sender_sr.py    
+
+Example usage:
+
+python3 receiver_sr.py 5000 0.2
+
+python3 sender_sr.py 127.0.0.1 5000 test.txt 0.01
+
+The output of the receiving program will be written to a file called received_file_sr.dat.
+
+The difference between Selective Repeat and Go-Back-N is defined by three basic Features:
+
+(1) The receiver can buffer packets that are received out of order rather than discarding them. These packets can then be written to the output file in order when the receiver has received all the packets that make up the gaps in received packets.
+
+(2) Individual ACKs are sent for individual packets, rather than sending a cumulative ACK for a sequence number range. The sender thus has knowledge of which individual packets have been received.
+
+(3) The sender only has to retransmit unacknowledged packets upon timeout and does not have to retransmit an entire window of packets like it does for Go-Back-N.
+
+The single-timer constraint states that the socket timeout acts as one logical timer that tracks the oldest unacknowledged packet. When the sender base window moves forward, the logical timer simply moves forward to the next oldest unacknowledged packet. Only one timer is ever used while sending packets to the sender's receiver.
+
+Testing was conducted and verified that the output found in each case was identical (using diff) for 0% loss, 10% loss, 20% loss, and 30% loss for both text files and binary files; testing was performed with multiple windows, single packets, and empty windows.
